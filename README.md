@@ -7,15 +7,19 @@ This repository contains the official implementation of the paper: "[Universal I
 🚧We are currently cleaning and reformatting the code. Please stay tuned!🚧
 
 ## Abstract
-> Despite the reduced radiation dose, suitability for objects with physical constraints, and accelerated scanning procedure, incomplete-view computed tomography (CT) images suffer from severe artifacts, hampering their value for clinical diagnosis. The incomplete-view CT can be divided into two scenarios depending on the sampling of projection, sparse-view CT and limited-angle CT, each encompassing various settings for different clinical requirements. Existing methods tackle with these settings separately and individually due to their significantly different artifact patterns; this, however, gives rise to high computational and storage costs, hindering its flexible adaptation to new settings. To address this challenge, we present the first-of-its-kind all-in-one incomplete-view CT reconstruction model with PROmpted Contextual Transformer, termed ProCT. More specifically, we first devise the projection view-aware prompting to provide setting-discriminative information, enabling a single model to handle diverse incomplete-view CT settings. Then, we propose artifact-aware contextual learning to provide the contextual guidance of image pairs from either CT phantom or publicly available datasets, making ProCT capable of accurately removing the complex artifacts from the incomplete-view CT images. Extensive experiments demonstrate that ProCT can achieve superior performance on a wide range of incomplete-view CT settings using a single model. Remarkably, our model with only image-domain information surpasses the state-of-the-art dual-domain methods that require the access to raw data.
+> Incomplete-view computed tomography (CT) can shorten the data acquisition time and allow scanning of large objects, including sparse-view and limited-angle scenarios, each with various settings, such as different view numbers or angular ranges. However, the reconstructed images present severe, varying artifacts due to different missing projection data patterns. Existing methods tackle these scenarios/settings separately and individually, which are cumbersome and lack the flexibility to adapt to new settings. To enjoy the multi-setting synergy in a single model, we propose a novel Prompted Contextual Transformer (ProCT) for incomplete-view CT reconstruction. The novelties of ProCT lie in two folds. First, we devise a projection view-aware prompting to provide setting-discriminative information, enabling a single ProCT to handle diverse incomplete-view CT settings. Second, we propose artifact-aware contextual learning to sense artifact pattern knowledge from in-context image pairs, making ProCT capable of accurately removing the complex, unseen artifacts. Extensive experimental results on two publicly available clinical CT datasets demonstrate the superior performance of ProCT over state-of-the-art methods---including single-setting models---on a wide range of incomplete-view CT settings, strong generalization to unseen datasets and scenarios, and improved performance when sinogram data is available.
 
 
 ## Updates
-- [ ] code coming soon.
+- [ ] pretrained model.
+- [ ] training/inference code.
+- [x] architecture code.
 - [x] 2023/12/13. Initial commit.
 
 
 ## Requirements
+We built our model based on torch-radon toolbox that provides highly-efficient and differentiable
+tomography transformations. 
 ```
 - python==3.7.16
 - torch==1.7.1+cu110  # depends on the CUDA version of your machine
@@ -32,4 +36,22 @@ This repository contains the official implementation of the paper: "[Universal I
 - tensorboard==2.11.2  # optional
 - wandb==0.15.2  # optional
 - tqdm==4.65.0  # optional
+```
+
+## Acknowledgement
+- Torch Radon
+- DehazeFormer
+- UniverSeg
+- GloReDi
+- ...
+
+## Citation
+If you find our work and code helpful, please kindly cite our paper :)
+```
+@article{li2023prompt,
+  title={Prompt-In-Prompt Learning for Universal Image Restoration},
+  author={Li, Zilong and Lei, Yiming and Ma, Chenglong and Zhang, Junping and Shan, Hongming},
+  journal={arXiv preprint arXiv:2312.07846},
+  year={2023}
+}
 ```
