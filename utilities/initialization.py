@@ -16,6 +16,6 @@ def init_weights_with_scale(modules, scale=1):
             m.weight.data *= scale
             if m.bias is not None:
                 m.bias.data.zero_()
-        elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm, nn.InstanceNorm2d)):
+        elif isinstance(m, (nn.BatchNorm2d, nn.GroupNorm)):
             nn.init.constant_(m.weight, 1)
             nn.init.constant_(m.bias.data, 0.0)
