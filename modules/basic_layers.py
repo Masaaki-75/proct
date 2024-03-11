@@ -80,19 +80,13 @@ def get_conv_block(in_channels, out_channels, kernel_size=3, stride=1, padding=0
     norm_idx = adn_order.find('N')
     conv_idx = adn_order.find('C')
     norm_channels = out_channels if conv_idx < norm_idx else in_channels
-    if norm_type is not None and 'GROUP' in norm_type.upper():
-        if 'num_channels' not in norm_kwargs.keys():
-            norm_kwargs['num_channels'] = norm_channels
-        norm_layer = get_norm_layer(norm_type, kwargs=norm_kwargs, spatial_dims=spatial_dims)
-    else:
-        norm_layer = get_norm_layer(norm_type, [norm_channels], kwargs=norm_kwargs, spatial_dims=spatial_dims) 
     
     layer_dict = {
         'C': get_conv_layer(
             in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding, 
             padding_mode=padding_mode, dilation=dilation, groups=groups, bias=bias, 
             is_transposed=is_transposed, output_padding=output_padding, spatial_dims=spatial_dims),
-        'N': norm_layer,
+        'N': get_norm_layer(norm_type, [norm_channels], kwargs=norm_kwargs, spatial_dims=spatial_dims) ,
         'A': get_act_layer(act_type, kwargs=act_kwargs),
         'D': get_drop_layer(drop_type=drop_type, drop_rate=drop_rate, spatial_dims=dropout_dims)}
 
@@ -215,10 +209,20 @@ def get_norm_layer(norm_type, args=None, kwargs=None, spatial_dims=2):
         elif norm_type == 'LAYERCV':
             norm_classes = (LayerNorm, LayerNorm, LayerNorm)
         elif norm_type == 'GROUP':
-            if 'num_channels' not in kwargs.keys():
-                if len(args) == 1: # num_channels input as positional arg
-                    kwargs['num_channels'] = args[0]
-                    args = []
+            # `num_channels` should be in `args`, but GroupNorm takes `num_groups` first.
+            # We need to deal with this.
+            assert args is not None, f'{norm_type} chosen with no args.'
+            keys = kwargs.keys()
+            if len(args) == 1 and 'num_groups' in keys and 'num_channels' not in keys:
+                # Input: `args` == [num_channels], `kwargs` == dict(num_groups=num_groups)
+                args = (kwargs['num_groups'], args[0])
+                kwargs = {}
+            elif len(args) == 1 and 'num_channels' in keys and 'num_groups' not in keys:
+                # Input: `args` == [num_groups], `kwargs` == dict(num_channels=num_channels)
+                args = (args[0], kwargs['num_channels'])
+            elif len(args) == 2:
+                # Input: `args` == [num_groups, num_channels]
+                assert 'num_channels' not in keys and 'num_groups' not in keys, f'Got 2 args ({args}), contradict with kwargs ({kwargs})'
             norm_classes = (nn.GroupNorm, nn.GroupNorm, nn.GroupNorm)
         elif norm_type == 'LOCALRESPONSE':
             norm_classes = (nn.LocalResponseNorm, nn.LocalResponseNorm, nn.LocalResponseNorm)
@@ -363,3 +367,10 @@ class PixelUnshuffle(nn.Module):
 #         '''
 
 #         return pixel_unshuffle(input, self.downscale_factor)
+
+
+if __name__ == '__main__':
+    norm_args = [64, ]
+    norm_kwargs = {'num_groups':4}
+    layer = get_norm_layer('GROUP', norm_args, norm_kwargs)
+    print(layer)
