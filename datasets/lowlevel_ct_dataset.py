@@ -51,9 +51,10 @@ class SimpleCTDataset(BaseCTDataset):
             img_path_list = [os.path.join(self.root_dir, _.strip()) for _ in f.readlines()]
         
         if mode == 'train':
-            return img_path_list[:self.num_train]
+            paths = img_path_list[:self.num_train]
         else:
-            return img_path_list[-self.num_val:]
+            paths = img_path_list[-self.num_val:]
+        return paths
         
     def __len__(self):
         return len(self.img_path_list)
