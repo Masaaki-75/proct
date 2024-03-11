@@ -48,9 +48,9 @@ tomography transformations.
 ## Citation
 If you find our work and code helpful, please kindly cite our paper :)
 ```
-@article{li2023prompt,
-  title={Prompt-In-Prompt Learning for Universal Image Restoration},
-  author={Li, Zilong and Lei, Yiming and Ma, Chenglong and Zhang, Junping and Shan, Hongming},
+@article{ma2023proct,
+  title={Universal Incomplete-View CT Reconstruction with Prompted Contextual Transformer},
+  author={Ma, Chenglong, Li, Zilong and He, Junjun and Zhang, Junping and Zhang, Yi and Shan, Hongming},
   journal={arXiv preprint arXiv:2312.07846},
   year={2023}
 }
