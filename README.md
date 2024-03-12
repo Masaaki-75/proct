@@ -37,6 +37,7 @@ tomography transformations.
 - wandb==0.15.2  # optional
 - tqdm==4.65.0  # optional
 ```
+If you're using higher version of CUDA, following the steps in `./inst_tr.sh` may be helpful for installation.
 
 ## Acknowledgement
 - Torch Radon
