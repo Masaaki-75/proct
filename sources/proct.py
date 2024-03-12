@@ -822,7 +822,7 @@ class Decoder(nn.Module):
         return x
     
 
-class ProCTV2(BasicWrapper):
+class ProCT(BasicWrapper):
     def __init__(
         self, in_channels=1, out_channels=1, 
         window_size=8, 
