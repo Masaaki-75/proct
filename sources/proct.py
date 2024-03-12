@@ -950,7 +950,7 @@ if __name__ == '__main__':
         'block_kwargs': {'norm_type':'INSTANCE'},
         }
     wrapper_kwargs = {'img_size':256, 'simul_poisson_rate':1e6, 'simul_gaussian_rate':0.01}
-    net = ProCTV2(**net_dict, **wrapper_kwargs)#.cuda()
+    net = ProCT(**net_dict, **wrapper_kwargs)#.cuda()
     y = net(x, context, prompt, [1])
 
     
