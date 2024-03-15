@@ -1,5 +1,5 @@
 # Universal Incomplete-View CT Reconstruction with Prompted Contextual Transformer
-This repository contains the official implementation of the paper: "[Universal Incomplete-View CT Reconstruction with Prompted Contextual Transformer](https://arxiv.org/abs/2312.07846)", where we built a model that unifies the image-domain reconstruction of sparse-view CT (SVCT) and limited-angle CT (LACT) from a vast range of incomplete-view CT settings using a single set of parameters.
+This repository contains the official implementation of the paper: "[Prompted Contextual Transformer for Incomplete-View CT Reconstruction](https://arxiv.org/abs/2312.07846)" (formerly, "Universal Incomplete-View CT Reconstruction with Prompted Contextual Transformer"), where we built a model that unifies the image-domain reconstruction of incomplete-view CT (including sparse-view CT and limited-angle CT) from a vast range of settings using a single set of parameters.
 
 ![](figs/teaser.png)
 
@@ -50,7 +50,7 @@ If you're using higher version of CUDA, following the steps in `./inst_tr.sh` ma
 If you find our work and code helpful, please kindly cite our paper :)
 ```
 @article{ma2023proct,
-  title={Universal Incomplete-View CT Reconstruction with Prompted Contextual Transformer},
+  title={Prompted Contextual Transformer for Incomplete-View CT Reconstruction},
   author={Ma, Chenglong, and Li, Zilong and He, Junjun and Zhang, Junping and Zhang, Yi and Shan, Hongming},
   journal={arXiv preprint arXiv:2312.07846},
   year={2023}
