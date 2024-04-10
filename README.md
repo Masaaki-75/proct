@@ -11,8 +11,9 @@ This repository contains the official implementation of the paper: "[Prompted Co
 
 
 ## Updates
-- [ ] pretrained model.
-- [ ] training/inference code.
+- [ ] training code.
+- [x] pretrained model.
+- [x] inference code.
 - [x] architecture code.
 - [x] 2023/12/13. Initial commit.
 
