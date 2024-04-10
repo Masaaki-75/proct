@@ -1,4 +1,4 @@
-# Universal Incomplete-View CT Reconstruction with Prompted Contextual Transformer
+# Prompted Contextual Transformer for Incomplete-View CT Reconstruction
 This repository contains the official implementation of the paper: "[Prompted Contextual Transformer for Incomplete-View CT Reconstruction](https://arxiv.org/abs/2312.07846)" (formerly, "Universal Incomplete-View CT Reconstruction with Prompted Contextual Transformer"), where we built a model that unifies the image-domain reconstruction of incomplete-view CT (including sparse-view CT and limited-angle CT) from a vast range of settings using a single set of parameters.
 
 ![](figs/teaser.png)
