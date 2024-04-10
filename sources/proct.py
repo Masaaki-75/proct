@@ -1,6 +1,6 @@
 """
 ProCT: Prompted Contextual Transformer for (Universal) Incomplete-View CT Reconstruction.
-- Ref: https://arxiv.org/abs/2312.07846
+- Reference: https://arxiv.org/abs/2312.07846
 """
 import sys
 sys.path.append('..')
@@ -399,10 +399,10 @@ class TokenMixer(nn.Module):
             if m.bias is not None:
                 nn.init.constant_(m.bias, 0)
 
-    def check_size(self, x, shift=False):
-        _, _, h, w = x.size()
-        mod_pad_h = (self.window_size - h % self.window_size) % self.window_size
-        mod_pad_w = (self.window_size - w % self.window_size) % self.window_size
+    def check_size(self, x: torch.Tensor, shift=False):
+        _, _, H, W = x.shape
+        mod_pad_h = (self.window_size - H % self.window_size) % self.window_size
+        mod_pad_w = (self.window_size - W % self.window_size) % self.window_size
         
         if shift:
             x = F.pad(x, (self.shift_size, (self.window_size-self.shift_size+mod_pad_w) % self.window_size,
@@ -411,20 +411,20 @@ class TokenMixer(nn.Module):
             x = F.pad(x, (0, mod_pad_w, 0, mod_pad_h), 'reflect')
         return x
 
-    def window_partition(self, x, window_size):
+    def window_partition(self, x: torch.Tensor, window_size: int):
         # "B H W C -> B H/win win W/win win C -> B H/win W/win win win C -> (B*H*W/win/win) win*win C"
         B, H, W, C = x.shape
         x = x.view(B, H // window_size, window_size, W // window_size, window_size, C)
         windows = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(-1, window_size**2, C)
         return windows
 
-    def window_reverse(self, windows, window_size, H, W):
+    def window_reverse(self, windows: torch.Tensor, window_size, H, W):
         B = int(windows.shape[0] / (H * W / window_size / window_size))
         x = windows.view(B, H // window_size, W // window_size, window_size, window_size, -1)
         x = x.permute(0, 1, 3, 2, 4, 5).contiguous().view(B, H, W, -1)
         return x
     
-    def forward(self, x, context=None, **attn_kwargs):
+    def forward(self, x: torch.Tensor, context=None, **attn_kwargs):
         # x: [B, Ciq, H, W], context: [B, S, Cic, H, W]
         H, W = x.shape[-2:]
         V = self.V(x)  # [B, Ciq, H, W]
@@ -765,8 +765,8 @@ class Decoder(nn.Module):
         attn_ratio=[0, 1/2, 1, 0, 0],
         drop_proj_rates=[0., 0., 0., 0., 0.],
         drop_path_rates=[0., 0., 0., 0., 0.],
-        use_rope=True,
-        use_spectrals=[True, True, True, True, True],
+        use_rope=False,
+        use_spectrals=[True, True, True, False, False],
         fusion_type='cat',
         cond_dim=24,
         use_bounded_scale=True,
@@ -834,7 +834,7 @@ class ProCT(BasicWrapper):
         drop_proj_rates=0.,
         drop_path_rates=0.1,
         cond_dim=24,
-        use_rope=True,
+        use_rope=False,
         use_spectrals=[True, True, True, False, False],
         fusion_type='cat', 
         use_learnable_prompt=False, 
@@ -842,7 +842,7 @@ class ProCT(BasicWrapper):
         use_scale_for_mlp=True,
         use_global_scale=False,
         is_context_pair=False,
-        block_kwargs={},
+        block_kwargs={'norm_type':'INSTANCE'},
         **wrapper_kwargs):
         super().__init__(**wrapper_kwargs)
         self.patch_size = 4

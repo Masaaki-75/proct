@@ -202,6 +202,10 @@ def get_norm_layer(norm_type, args=None, kwargs=None, spatial_dims=2):
         
         if norm_type == 'INSTANCE':
             norm_classes = (nn.InstanceNorm1d, nn.InstanceNorm2d, nn.InstanceNorm3d)
+            # `affine` default to False in pytorch, for unknown reasons...
+            # Ref: https://github.com/pytorch/pytorch/issues/22755
+            if 'affine' not in kwargs.keys():
+                kwargs.update({'affine':True})
         elif norm_type == 'BATCH':
             norm_classes = (nn.BatchNorm1d, nn.BatchNorm2d, nn.BatchNorm3d)
         elif norm_type == 'LAYER':
