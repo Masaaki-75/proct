@@ -6,17 +6,11 @@ import warnings
 import numpy as np
 import torch.nn as nn
 import torch.optim as optim
+import torch.backends.cudnn
 from torch.optim.lr_scheduler import _LRScheduler
-# from torch.optim.lr_scheduler import StepLR, MultiStepLR, ExponentialLR, 
-# from sklearn.cluster import FeatureAgglomeration
 
 from torch.cuda.amp import autocast as autocast
 from torch.cuda.amp import GradScaler as GradScaler
-
-#from utilities.ct_tools import CTTool
-# from utilities.sobel_loss import *
-from utilities.perceptual_loss import FeatureLoss
-# from utilities.metrics import *
 
 
 def poly_lr(epoch, max_epochs, initial_lr, exponent=0.9):
@@ -221,6 +215,7 @@ class BasicTrainer:
             warnings.warn(f'Currently only support schedulers among Step, MultiStep, Exp, Poly, Cosine, got {scheduler_name}. So using none (constant).')
             return None
             #raise NotImplementedError('Currently only support schedulers among Step, MultiStep, Exp, Poly, Cosine.')
+            
     @staticmethod
     def save_checkpoint(param, path, name:str, epoch=None):
         # simply save the checkpoint by epoch
@@ -269,10 +264,7 @@ class BasicTrainer:
             net_checkpoint = torch.load(net_checkpath, map_location=self.device)
             
             if net is None:
-                try:  # 暂时debug
-                    self.net.load_state_dict(net_checkpoint['network'], strict=True)
-                except KeyError:
-                    self.net.load_state_dict(net_checkpoint['net_param'], strict=True)
+                self.net.load_state_dict(net_checkpoint['network'], strict=True)
                 print(f'Finish loading network from (e{self.epoch}, i{self.iter}):', net_checkpath)
                 if output:
                     return self.net
@@ -283,8 +275,6 @@ class BasicTrainer:
                     return net
         else:
             raise ValueError(f'Checkpoint path does not exist: {net_checkpath}.')
-            #self.weights_init(self.net)
-            #warnings.warn(f'**opt_checkpath provided but does not exist ({net_checkpath}).**')
 
 
     def load_opt(self,):
@@ -329,10 +319,6 @@ class BasicTrainer:
         else:
             raise NotImplementedError('pixel_loss error: mode not in [l1, sml1, l2].')
         return criterion
-    
-    @staticmethod
-    def get_perceptual_criterion(mse_loss, blocks, weights, device):
-        return FeatureLoss(mse_loss, blocks, weights, device)
 
     # ---- basic logging function ----
     @staticmethod
@@ -367,7 +353,8 @@ class BasicTrainer:
     
     @staticmethod
     def wandb_init2(opt):
-        wandb.login(key='')
+        key = opt.wandb_key
+        wandb.login(key=key)
         wandb_root = opt.tensorboard_root if opt.wandb_root == '' else opt.wandb_root
         wandb_dir = opt.tensorboard_dir if opt.wandb_dir == '' else opt.wandb_dir
         wandb_path = os.path.join(wandb_root, wandb_dir)
@@ -412,52 +399,6 @@ class BasicTrainer:
         else:
             wandb.log(kwargs)
 
-    # @staticmethod
-    # def wandb_init2(opt):
-    #     wandb.login(key='afe0d87ee17985aeb14f4fc97a7dc78e55ece15c')
-    #     wandb_root = opt.tensorboard_root if opt.wandb_root == '' else opt.wandb_root
-    #     wandb_dir = opt.tensorboard_dir if opt.wandb_dir == '' else opt.wandb_dir
-    #     wandb_path = os.path.join(wandb_root, wandb_dir)
-    #     if not os.path.exists(wandb_path):
-    #         os.makedirs(wandb_path)
-    #     wandb_writer = wandb.init(project=opt.wandb_project, name=str(wandb_dir), dir=wandb_path, resume='allow', reinit=True,)
-    #     wandb_writer.config.update(dict(num_epochs=opt.epochs, batch_size=opt.batch_size, learning_rate=opt.lr, save_ckpt_dir=os.path.join(opt.checkpoint_root, opt.checkpoint_dir)))
-    #     return wandb_writer
-
-    # @staticmethod
-    # def wandb_scalar(wandb_writer, r_path, step=None, **kwargs):
-    #     for key in kwargs.keys():
-    #         if step is not None:
-    #             wandb_writer.log({'{}'.format(os.path.join(r_path, key)): kwargs[key]}, step=step)
-    #         else:
-    #             wandb_writer.log({'{}'.format(os.path.join(r_path, key)): kwargs[key]})
-    
-    # @staticmethod
-    # def wandb_image(wandb_writer, r_path, step=None, **kwargs):
-    #     for key in kwargs.keys():
-    #         wandb_img = wandb.Image(kwargs[key])
-    #         if step is not None:
-    #             wandb_writer.log({'{}'.format(os.path.join(r_path, key)): wandb_img}, step=step)
-    #         else:
-    #             wandb_writer.log({'{}'.format(os.path.join(r_path, key)): wandb_img})
-
-
-    # # basic Sparse_CT accuracy by window
-    # def get_metrics_by_window(self, miu_input, miu_target, spatial_dims=2, to_HU=True):
-    #     # calculate miu ct accuracy by CT window
-    #     # defalut window(1500, 3000), full window accuracy
-    #     if to_HU:
-    #         hu_input = self.cttool.window_transform(self.cttool.mu2HU(miu_input))
-    #         hu_target = self.cttool.window_transform(self.cttool.mu2HU(miu_target))
-    #     else:
-    #         hu_input, hu_target = miu_input, miu_target
-    #     # data_range of normalized HU img
-    #     data_range = 1
-    #     rmse, psnr, ssim = compute_measure(hu_input, hu_target, data_range, spatial_dims=spatial_dims)
-    #     return rmse, psnr, ssim
-
-
-    # ---- training fucntion ----
     def fit(self):
         raise NotImplementedError('function fit() not implemented.')
 
