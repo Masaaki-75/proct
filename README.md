@@ -20,25 +20,10 @@ This repository contains the official implementation of the paper: "[Prompted Co
 
 ## Requirements
 We built our model based on torch-radon toolbox that provides highly-efficient and differentiable
-tomography transformations. 
-```
-- python==3.7.16
-- torch==1.7.1+cu110  # depends on the CUDA version of your machine
-- torchaudio==0.7.2
-- torchvision==0.8.2+cu110
-- torch-radon==1.0.0
-- monai==1.0.1
-- scipy==1.7.3
-- einops==0.6.1
-- opencv-python==4.7.0.72
-- SimpleITK==2.2.1
-- numpy==1.21.6
-- pandas==1.3.5  # optional
-- tensorboard==2.11.2  # optional
-- wandb==0.15.2  # optional
-- tqdm==4.65.0  # optional
-```
-If you're using higher version of CUDA, following the steps in `./inst_tr.sh` may be helpful for installation.
+tomography transformations. There are official [V1](https://github.com/matteo-ronchetti/torch-radon) repository 
+and an unofficial but better-maintained [V2](https://github.com/carterbox/torch-radon) repository. V1 works for
+older pytorch/CUDA (torch<= 1.7., CUDA<=11.3), while V2 supports newer versions.
+Following the steps in `./inst_tr.sh` may be helpful for installation.
 
 ## Acknowledgement
 - Torch Radon
