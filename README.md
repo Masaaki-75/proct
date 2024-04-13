@@ -31,6 +31,7 @@ Following the steps in `./inst_tr.sh` may be helpful for installation.
 - [UniverSeg](https://github.com/JJGO/UniverSeg)
 - [GloReDi](https://github.com/longzilicart/GloReDi)
 - ...
+
 Big thanks to their great work for insights and open-sourcing!
 
 ## Citation
