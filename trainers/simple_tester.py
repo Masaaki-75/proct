@@ -47,7 +47,7 @@ class SimpleTester(BasicTrainer):
         deeplesion_dir = "path/to/your/deeplesion/data"
         aapm_dir = "path/to/your/aapm/data"
         if "your" in deeplesion_dir or "your" in aapm_dir:
-            warnings.warn(f"Please specify your own data directory in SimpleTester.")
+            raise ValueError(f"Please specify your own data directory in SimpleTester.")
         
         if dataset_name == 'deeplesion':
             dataset_root_dir = deeplesion_dir
@@ -233,7 +233,7 @@ class SimpleTester(BasicTrainer):
             prompt = self.mask2prompt(sino_mask)
         
             task_ids = self.get_task_ids(task, task_param)  # Only useful when using learnable prompt
-            pred_imgs = self.net(lq_imgs, context=supp_imgs, cond=prompt, task_ids=task_ids)
+            pred_imgs = self.net(lq_imgs, context=supp_imgs, cond=prompt, task_ids=task_ids).clamp(0, 1)
             test_dict = {'out': pred_imgs,}
         else:
             raise NotImplementedError(f'network {self.net_name} not implemented')

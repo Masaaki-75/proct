@@ -239,7 +239,6 @@ class BasicWrapper(nn.Module):
             if not sinogram.is_floating_point():
                 sinogram = sinogram.to(torch.float32)
             sinogram_out = sinogram + sigma * torch.randn_like(sinogram)
-            sinogram_out = sinogram_out.clamp(sinogram.min(), sinogram.max())
             if sinogram_out.dtype != dtype:
                 sinogram_out = sinogram_out.to(dtype)
             sinogram_out = sinogram_out.clamp(smin, smax)
