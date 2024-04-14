@@ -27,7 +27,7 @@ net_name="proct"
 net_dict="dict(use_rope=False,block_kwargs={'norm_type':'INSTANCE'},drop_path_rates=0.1,use_spectrals=[True,True,True,False,False],use_learnable_prompt=False,num_heads=[2,4,6,1,1],attn_ratio=[0,1/2,1,0,0])"
 support_size=1
 train_json="./datasets/dl_train.txt"
-val_json="./datasets/dl_test.txt"
+val_json="./datasets/aapm_test.txt"
 tester_save_dir="./res"
 tester_save_name="proct_v1"
 net_checkpath="./ckpt/proct_v1.pkl"
