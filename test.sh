@@ -6,9 +6,9 @@ train_json="./datasets/dl_train.txt"
 val_json="./datasets/dl_test.txt"
 tester_save_dir="./res"
 tester_save_name="proct_v1"
-net_checkpath="./ckpt/proct_v1.pkl"
+net_checkpath="./ckpts/proct_ckpt.pkl"
 
-CUDA_VISIBLE_DEVICES='7' python main.py \
+CUDA_VISIBLE_DEVICES='0' python main.py \
 --dataset_name 'deeplesion' --num_train 10000 --num_val 1000 \
 --train_json ${train_json} --val_json ${val_json} \
 --support_size ${support_size} --use_phantom \

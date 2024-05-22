@@ -7,6 +7,7 @@ import torch.backends.cudnn
 
 from wrappers.basic_wrapper import BasicWrapper
 # from trainers.proct_trainer import ProCTTrainer
+# from trainers.proct_trainer_context import ProCTTrainerContext
 from trainers.simple_tester import SimpleTester
 from sources.proct import ProCT
 
@@ -37,11 +38,10 @@ def get_parser():
     # data_path
     parser.add_argument('--img_size', default=256, nargs='+', type=int, help='combined image size')
     parser.add_argument('--dataset_name', default='deeplesion', type=str, help='aapm, deeplesion, etc.')
-    parser.add_argument('--dataset_dir', default='', type=str)
     parser.add_argument('--train_json', default='', type=str, help='')
     parser.add_argument('--val_json', default='', type=str, help='')
     parser.add_argument('--num_train', default=10000, type=int, help='Number of training examples')
-    parser.add_argument('--num_val', default=1000, type=int, help='Number of validation examples')
+    parser.add_argument('--num_val', default=5000, type=int, help='Number of validation examples')
 
     # dataloader
     parser.add_argument('--batch_size', default=4, type=int, help='batch size')
@@ -105,14 +105,11 @@ def get_parser():
     parser.add_argument('--max_hu', default=3072, type=int)
     
     parser.add_argument('--support_size', default=0, type=int, help='Number of support images corresponding to each input image')
-    parser.add_argument('--unshuffle', default=False, action='store_true', help='Shuffle in training set.')
     parser.add_argument('--loss_weight', default=False, action='store_true')
     parser.add_argument('--loss2_factor', default=1, type=float)
-    parser.add_argument('--prob_identity', default=0, type=float)
     parser.add_argument('--prob_flip', default=0, type=float)
     parser.add_argument('--use_phantom', default=False, action='store_true')
     parser.add_argument('--net_dict2', default="{}", type=str, help='dictionary specifying network architecture.')
-    
     return parser
 
 
@@ -158,9 +155,11 @@ def run_main(opt):
     
     # [training mode]
     if trainer_mode == 'train':
-        pass
-        # trainer = ProCTTrainer(opt=opt, net=net)
-        # trainer.fit()
+        trainer = ProCTTrainer(opt=opt, net=net)
+        trainer.fit()
+    elif trainer_mode == 'train_slow':
+        trainer = ProCTTrainerContext(opt=opt, net=net)
+        trainer.fit()
     elif trainer_mode == 'test':
         tester = SimpleTester(opt=opt, net=net)
         tester.run()
