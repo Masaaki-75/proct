@@ -121,10 +121,10 @@ __path/to/your/aapm/data
 Finally, replace the global variables (`DEEPL_DIR` and `AAPM_DIR`) in `datasets/lowlevel_ct_dataset.py` with your own `path/to/your/deeplesion/data` and `path/to/your/aapm/data`!
 
 
-# Demo
+## Demo
 Once the environments and datasets are ready, you can check the basic forwarding process of ProCT in `demo.py`. The checkpoint file is provided in the [Releases](https://github.com/Masaaki-75/proct/releases) page.
 
-# Training and Inference
+## Training and Inference
 Once the environments and datasets are ready, you can train/test ProCT using scripts in `train.sh` and `test.sh`.
 
 ## Acknowledgement
