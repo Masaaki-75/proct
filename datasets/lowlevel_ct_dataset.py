@@ -1,18 +1,16 @@
 import os
 import sys
 sys.path.append('..')
-from datasets.base_ct_dataset import BaseCTDataset
-import cv2
 from PIL import Image
 import torch
-import SimpleITK as sitk
 import numpy as np
 from utilities.misc import ensure_tuple_rep
-
-
-#torch.multiprocessing.set_start_method('spawn')
+from datasets.base_ct_dataset import BaseCTDataset
 
 PHANTOM = np.load('datasets/phantom.npy')
+DEEPL_DIR = "path/to/your/deeplesion/data"
+AAPM_DIR = "path/to/your/aapm/data"
+
 
 class SimpleCTDataset(BaseCTDataset):
     def __init__(
@@ -66,11 +64,6 @@ class SimpleCTDataset(BaseCTDataset):
             img = np.load(img_path).squeeze()
         elif img_ext in ['jpg', 'jpeg', 'png']:
             img = np.asarray(Image.open(img_path))
-            # img = cv2.imread(img_path).squeeze()
-            # if img.ndim == 3:
-            #     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        elif img_ext in ['gz', 'dcm', 'ima']:
-            img = sitk.GetArrayFromImage(sitk.ReadImage(img_path)).squeeze()
         else:
             raise NotImplementedError(f'Got unsupported image extension: {img_ext}')
         
@@ -110,6 +103,22 @@ class SimpleCTDataset(BaseCTDataset):
         return self.get_input_mu(img_path)
 
 
+class RandomContextDataset(SimpleCTDataset):
+    def __init__(self, img_list_info, root_dir='', img_shape=(512, 512), clip_hu=False, min_hu=-1024, max_hu=3072, mu_water=0.192, mu_air=0, mode='train', num_train=10000, num_val=1000):
+        super().__init__(img_list_info, root_dir, img_shape, clip_hu, min_hu, max_hu, mu_water, mu_air, mode, num_train, num_val)
+    
+        self.num_samples = len(self.img_path_list)
+        np.random.shuffle(self.img_path_list)
+    
+    def __length__(self):
+        return self.num_samples
+    
+    def __getitem__(self, index):
+        rand_index = np.random.randint(0, len(self.img_path_list))
+        while rand_index == index:
+            rand_index = np.random.randint(0, len(self.img_path_list))
+        img_path = self.img_path_list[rand_index]
+        return self.get_input_mu(img_path)
 
 
 if __name__ == '__main__':

@@ -8,7 +8,6 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.backends.cudnn
 from torch.optim.lr_scheduler import _LRScheduler
-
 from torch.cuda.amp import autocast as autocast
 from torch.cuda.amp import GradScaler as GradScaler
 
@@ -354,6 +353,8 @@ class BasicTrainer:
     @staticmethod
     def wandb_init2(opt):
         key = opt.wandb_key
+        if len(key) <= 1:
+            raise ValueError('Please specify valid API key to run WANDB!')
         wandb.login(key=key)
         wandb_root = opt.tensorboard_root if opt.wandb_root == '' else opt.wandb_root
         wandb_dir = opt.tensorboard_dir if opt.wandb_dir == '' else opt.wandb_dir

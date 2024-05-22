@@ -12,7 +12,7 @@ import torch.nn.functional as F
 import torch.cuda
 from torch.utils.data import DataLoader
 from trainers.basic_trainer import BasicTrainer
-from datasets.lowlevel_ct_dataset import SimpleCTDataset, PHANTOM
+from datasets.lowlevel_ct_dataset import SimpleCTDataset, PHANTOM, DEEPL_DIR, AAPM_DIR
 from wrappers.basic_wrapper import BasicWrapper
 from collections import defaultdict
 from utilities.rec_loss import get_metrics
@@ -44,17 +44,17 @@ class SimpleTester(BasicTrainer):
         self.dataset_name = dataset_name
         print('Loading dataset: ', dataset_name)
         
-        deeplesion_dir = "path/to/your/deeplesion/data"
-        aapm_dir = "path/to/your/aapm/data"
-        if "your" in deeplesion_dir or "your" in aapm_dir:
-            raise ValueError(f"Please specify your own data directory in SimpleTester.")
-        
         if dataset_name == 'deeplesion':
-            dataset_root_dir = deeplesion_dir
+            dataset_root_dir = DEEPL_DIR
         elif dataset_name == 'aapm':
-            dataset_root_dir = aapm_dir
+            dataset_root_dir = AAPM_DIR
         else:
-            raise NotImplementedError('Dataset not implemented.')
+            raise NotImplementedError(f'Dataset not implemented: {dataset_name}.')
+        
+        if not os.path.exists(dataset_root_dir):
+            raise ValueError(
+                f"Invalid root path for dataset {dataset_name}: {dataset_root_dir}." + \
+                    "Please check if it exists (in datasets/lowlevel_ct_dataset.py)")
         
         self.train_dataset = None
         self.test_dataset = SimpleCTDataset(
@@ -67,7 +67,7 @@ class SimpleTester(BasicTrainer):
             self.test_loader = DataLoader(self.test_dataset, batch_size=self.batch_size, num_workers=opt.num_workers)
             # train dataset to provide in-context pairs
             self.train_dataset = SimpleCTDataset(
-                root_dir=deeplesion_dir, img_list_info=opt.train_json, img_shape=self.img_size, mode='train', 
+                root_dir=DEEPL_DIR, img_list_info=opt.train_json, img_shape=self.img_size, mode='train', 
                 num_train=opt.num_train, num_val=opt.num_val, min_hu=opt.min_hu, max_hu=opt.max_hu, clip_hu=opt.clip_hu)
 
         self.phantom = self.prepare_phantom(PHANTOM)
@@ -158,10 +158,14 @@ class SimpleTester(BasicTrainer):
             sino_mask = self.net.get_limited_angle_indices_from_full_angles(task_param_, return_mask=True)
         elif task == 'limitedsparse_view':
             num_views, angle_range = task_param_
-            start_view = angle_range[0] * 2
+            # This is hybrid CT scenario 1: SVCT within LACT.
+            # Since the default number of full views is 720, here we 
+            # have 1 view representing 2 degrees, thus the factor 2.
+            start_view = angle_range[0] * 2  
             end_view = angle_range[1] * 2
             sino_mask = self.net.get_sparse_view_indices_from_full_angles(num_views, return_mask=True, start_view=start_view, end_view=end_view)
         elif task == 'limitedsparse_view2':
+            # This is hybrid CT scenario 2: SVCT intersects LACT.
             num_views, angle_range = task_param_
             sino_mask1 = self.net.get_sparse_view_indices_from_full_angles(num_views, return_mask=True)
             sino_mask2 = self.net.get_limited_angle_indices_from_full_angles(angle_range, return_mask=True)
