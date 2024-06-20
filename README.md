@@ -123,7 +123,9 @@ Finally, replace the global variables (`DEEPL_DIR` and `AAPM_DIR`) in `datasets/
 
 
 ## Demo
-Once the environments and datasets are ready, you can check the basic forwarding process of ProCT in `demo_easy.py`. The checkpoint file is provided in the [Releases](https://github.com/Masaaki-75/proct/releases) page.
+Once the environments and datasets are ready, you can check the basic forwarding process of ProCT in `./demo.ipynb`. The checkpoint file is provided in the [Releases](https://github.com/Masaaki-75/proct/releases) page.
+
+**UPDATE**. Considering that some users have trouble installing torch-radon package, we update some pre-computed in-context pairs in `./samples` as well as a simpler demo in `./demo_easy.ipynb`, where the code does not require torch-radon at all!
 
 ## Training and Inference
 Once the environments and datasets are ready, you can train/test ProCT using scripts in `train.sh` and `test.sh`.
