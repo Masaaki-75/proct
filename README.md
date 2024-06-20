@@ -20,6 +20,7 @@ Extensive experimental results on two public clinical CT datasets demonstrate __
 
 ## Updates
 - [ ] training code.
+- [x] demo.
 - [x] pretrained model.
 - [x] inference code.
 - [x] architecture code.
@@ -122,7 +123,7 @@ Finally, replace the global variables (`DEEPL_DIR` and `AAPM_DIR`) in `datasets/
 
 
 ## Demo
-Once the environments and datasets are ready, you can check the basic forwarding process of ProCT in `demo.py`. The checkpoint file is provided in the [Releases](https://github.com/Masaaki-75/proct/releases) page.
+Once the environments and datasets are ready, you can check the basic forwarding process of ProCT in `demo_easy.py`. The checkpoint file is provided in the [Releases](https://github.com/Masaaki-75/proct/releases) page.
 
 ## Training and Inference
 Once the environments and datasets are ready, you can train/test ProCT using scripts in `train.sh` and `test.sh`.
