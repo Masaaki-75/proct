@@ -6,8 +6,8 @@ import torch
 import torch.backends.cudnn
 
 from wrappers.basic_wrapper import BasicWrapper
-# from trainers.proct_trainer import ProCTTrainer
-# from trainers.proct_trainer_context import ProCTTrainerContext
+from trainers.proct_trainer import ProCTTrainer
+from trainers.proct_trainer_context import ProCTTrainerContext
 from trainers.simple_tester import SimpleTester
 from sources.proct import ProCT
 
