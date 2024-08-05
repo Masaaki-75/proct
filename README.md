@@ -19,7 +19,7 @@ Extensive experimental results on two public clinical CT datasets demonstrate __
 
 
 ## Updates
-- [ ] training code.
+- [x] training code.
 - [x] demo.
 - [x] pretrained model.
 - [x] inference code.
