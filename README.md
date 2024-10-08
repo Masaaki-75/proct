@@ -7,8 +7,6 @@ We build a robust and transferable network (named ProCT) that can reconstruct de
 ![](figs/teaser.png)
 
 
-🚧We are currently cleaning and reformatting the code. Please stay tuned!🚧
-
 ## Abstract
 > Promising computed tomography (CT) techniques for sparse-view and limited-angle scenarios can reduce the radiation dose, shorten the data acquisition time, and allow irregular and flexible scanning. Yet, these two scenarios involve multiple different settings that vary in view numbers or angular ranges, ultimately introducing complex artifacts to the reconstructed images. Existing CT reconstruction methods tackle these scenarios and/or settings _in isolation_, omitting their synergistic effects on each other for better robustness and transferability in clinical practice. 
 In this paper, we frame these diverse settings as a unified incomplete-view CT problem, and propose a novel Prompted Contextual Transformer (ProCT) to harness the multi-setting synergy from these incomplete-view CT settings, thereby achieving more robust and transferable CT reconstruction.
