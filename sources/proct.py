@@ -251,7 +251,13 @@ class SpatialFreqConv(nn.Module):
 
 class RLN(nn.Module):
     """
-    Revised LayerNorm, modified from DehazeFormer
+    Revised LayerNorm, modified from DehazeFormer. 
+    RLN normalizes over the entire feature map and then re-injects the original mean and variance, 
+    which preserves global intensity statistics and leads to clear PSNR/SSIM gains for low-level 
+    vision tasks compared with vanilla LayerNorm.
+
+    Reference: Vision Transformers for Single Image Dehazing.
+    Link: https://arxiv.org/abs/2204.03883
     """
     def __init__(self, dim, eps=1e-5, detach_grad=False):
         super(RLN, self).__init__()
