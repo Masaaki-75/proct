@@ -1,5 +1,5 @@
 # Prompted Contextual Transformer for Incomplete-View CT Reconstruction
-This repository contains the official implementation of the paper: "[Prompted Contextual Transformer for Incomplete-View CT Reconstruction](https://arxiv.org/abs/2312.07846)"
+This repository contains the official implementation of the paper: "[Universal pre-training for generalizable incomplete-view CT reconstruction](https://www.sciencedirect.com/science/article/pii/S0031320326004796)" (previously: Prompted Contextual Transformer for Incomplete-View CT Reconstruction)
 
 ## TL;DR
 We build a robust and transferable network (named ProCT) that can reconstruct degraded CT images from a vast range of incomplete-view CT settings within a single model in one pass, by leveraging multi-setting synergy for training.
@@ -8,12 +8,7 @@ We build a robust and transferable network (named ProCT) that can reconstruct de
 
 
 ## Abstract
-> Promising computed tomography (CT) techniques for sparse-view and limited-angle scenarios can reduce the radiation dose, shorten the data acquisition time, and allow irregular and flexible scanning. Yet, these two scenarios involve multiple different settings that vary in view numbers or angular ranges, ultimately introducing complex artifacts to the reconstructed images. Existing CT reconstruction methods tackle these scenarios and/or settings _in isolation_, omitting their synergistic effects on each other for better robustness and transferability in clinical practice. 
-In this paper, we frame these diverse settings as a unified incomplete-view CT problem, and propose a novel Prompted Contextual Transformer (ProCT) to harness the multi-setting synergy from these incomplete-view CT settings, thereby achieving more robust and transferable CT reconstruction.
-The novelties of ProCT lie in two folds. 
-First, we devise projection view-aware prompting to provide setting-discriminative information, enabling a single ProCT to handle diverse settings. 
-Second, we propose artifact-aware contextual learning to sense artifact pattern knowledge from in-context image pairs, making ProCT capable of accurately removing the complex, unseen artifacts. 
-Extensive experimental results on two public clinical CT datasets demonstrate __(i)__ superior performance of ProCT over state-of-the-art methods---including single-setting models---on a wide range of settings, __(ii)__ strong transferability to unseen datasets and scenarios, and __(iii)__ improved performance when integrating sinogram data.
+> Incomplete-view computed tomography (CT), which includes both sparse-view and limited-angle CT, aims to reduce radiation exposure, shorten data acquisition time, and enable more flexible scanning protocols. However, due to the significantly reduced number of projection views, it introduces complex artifacts in the reconstructed CT images, ultimately compromising diagnostic accuracy. Existing CT reconstruction methods often address each incomplete-view CT setting in isolation, i.e. one-setting-one-model, and overlook the multi-setting synergistic benefits on each other, resulting in limited generalizability to new datasets and settings. In this paper, we introduce universal pre-training that exploits multi-setting data to enhance incomplete-view CT reconstruction. To effectively integrate complementary knowledge across CT settings during such pre-training, we propose a Prompted Contextual Transformer (ProCT), featuring two key techniques. First, we devise view-aware prompting to encode view distribution knowledge into ProCT for handling diverse settings within a single model. Second, we propose artifact-aware contextual learning to extract artifact pattern knowledge from in-context image pairs, facilitating the removal of complex, previously unseen artifacts. Extensive experimental results on two public clinical CT datasets demonstrate the proposed ProCT (i) outperforms state-of-the-art methods, including single-setting models, across various incomplete-view CT settings, (ii) exhibits strong generalizability to unseen datasets, and (iii) effectively adapts to out-of-domain settings with minimal tuning. Additionally, ProCT further improves performance when integrating sinogram data. Our work highlights the potential of universal pre-training in medical imaging and presents a new paradigm for robust and generalizable incomplete-view CT reconstruction. 
 
 
 ## Updates
@@ -139,7 +134,18 @@ Big thanks to their great work for insights and open-sourcing!
 
 ## Citation
 If you find our work and code helpful, please kindly cite our paper :)
+
 ```
+@article{MA2026113513,
+title = {Universal pre-training for generalizable incomplete-view CT reconstruction},
+journal = {Pattern Recognition},
+volume = {178},
+pages = {113513},
+year = {2026},
+issn = {0031-3203},
+author = {Chenglong Ma and Zilong Li and Junjun He and Junping Zhang and Yi Zhang and Hongming Shan},
+}
+
 @article{ma2023proct,
   title={Prompted Contextual Transformer for Incomplete-View CT Reconstruction},
   author={Ma, Chenglong, and Li, Zilong and He, Junjun and Zhang, Junping and Zhang, Yi and Shan, Hongming},
